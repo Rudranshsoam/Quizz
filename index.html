@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Millionaire Challenge - 100 Unique Levels</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse,#1c4596,#07102e 70%);color:#fff;font:16px system-ui;min-height:100vh;padding:18px;display:grid;place-items:center}.app{width:min(1050px,100%);display:grid;grid-template-columns:1fr 290px;gap:16px}.panel{background:#081642df;border:1px solid #668de9;border-radius:20px;padding:20px;box-shadow:0 15px 50px #0008}.head{text-align:center}.logo{border:3px solid #ffd76b;border-radius:50%;width:58px;height:58px;margin:auto;display:grid;place-items:center;color:#ffd76b;font-size:30px}h1{font-size:clamp(1.3rem,3.2vw,2rem);margin:8px}.muted{color:#b8cdfb}.stats{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:15px}.pill{padding:7px 12px;border:1px solid #668de9;border-radius:20px;font-size:13px}.gold{color:#ffdc79}.question{margin:16px 0;background:linear-gradient(#183a85,#0a1c53);border:2px solid #719ef1;border-radius:15px;padding:26px 15px;text-align:center;font-size:clamp(1.1rem,3vw,1.4rem);font-weight:750;min-height:120px;display:grid;place-items:center}.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}.opt,.btn,.life{background:#10265d;color:white;border:1px solid #7599e9;border-radius:10px;padding:13px;text-align:left;cursor:pointer;font-size:1rem}.opt:hover:not(:disabled),.btn:hover:not(:disabled),.life:hover:not(:disabled){border-color:#ffdc79;background:#1b4089}.opt b{color:#ffdc79;margin-right:8px}.opt.correct{background:#11664c;border-color:#6af1b7}.opt.wrong{background:#79213a;border-color:#ff8196}.opt:disabled{cursor:default}.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px}.btn{font-weight:700;text-align:center}.primary{background:linear-gradient(100deg,#e9b63f,#ffe69a);color:#18244b;border:0}.feedback{text-align:center;min-height:30px;margin:12px;color:#ffdf8a}.ladder-container{max-height:350px;overflow-y:auto;padding-right:4px}.ladder{display:flex;flex-direction:column-reverse;gap:3px}.level{padding:5px 8px;border-radius:4px;color:#c6d5fa;font-size:11px;display:flex;justify-content:space-between}.level.current{background:#ffda70;color:#15234c;font-weight:800}.level.safe{border:1px solid #60d6ff}.lifes{display:grid;grid-template-columns:1fr;gap:7px;margin:10px 0}.life{text-align:center;font-size:13px;padding:9px 4px}.life span{display:inline-block;margin-right:6px;color:#ffdc79;font-size:16px}.life:disabled{opacity:.35;cursor:default}.small{font-size:12px;color:#a9c1f6;line-height:1.5}.overlay{position:fixed;inset:0;background:#020718df;display:none;place-items:center;padding:20px}.modal{max-width:480px;background:#10275f;border:2px solid #ffdc79;border-radius:18px;padding:26px;text-align:center}.modal h2{color:#ffdc79}.player-setup{margin:15px 0;text-align:left}.player-setup input{width:100%;padding:10px;border-radius:8px;border:1px solid #668de9;background:#07102e;color:#fff;margin-bottom:8px}.tag-box{display:flex;flex-wrap:wrap;gap:6px;max-height:80px;overflow-y:auto;margin-bottom:10px}.tag{background:#183a85;padding:4px 10px;border-radius:12px;font-size:12px;display:flex;align-items:center;gap:6px}.tag button{background:none;border:none;color:#ff8196;cursor:pointer;font-weight:bold}@media(max-width:720px){.app{grid-template-columns:1fr}.opts{grid-template-columns:1fr}.panel{padding:14px}.side{order:2}}
+</style>
+</head>
+<body>
+<div class="app">
+  <main class="panel">
+    <header class="head">
+      <div class="logo">₹</div>
+      <h1>MILLIONAIRE CHALLENGE</h1>
+      <div class="muted">1,000 Questions • Progressive Difficulty • Single Player</div>
+    </header>
+    <div class="stats">
+      <div class="pill">Username: <b class="gold" id="pname">Player</b></div>
+      <div class="pill">Lives: <b class="gold" id="plives">❤️❤️❤️</b></div>
+      <div class="pill">Level <b id="qn">1</b>/1000</div>
+      <div class="pill">Prize: <b class="gold" id="cash">₹0</b></div>
+    </div>
+    <div class="question" id="question">Enter your username and click Start Game to begin!</div>
+    <div class="opts" id="opts"></div>
+    <div class="feedback" id="feedback">Ready when you are. Good luck!</div>
+    <div class="actions">
+      <button class="btn primary" id="start">▶ Start Game</button>
+      <button class="btn" id="walk" disabled>Take money & walk</button>
+      <button class="btn" id="restart">↻ Restart Game</button>
+    </div>
+  </main>
+  <aside class="panel side">
+    <h2 class="gold">Username</h2>
+    <div class="player-setup">
+      <input type="text" id="username" value="Player" maxlength="24" placeholder="Enter username..." aria-label="Username">
+      <div class="small">Your name will appear in the game.</div>
+    </div>
+    <h2 class="gold">Lifelines</h2>
+    <div class="lifes">
+      <button class="life" id="fifty" disabled><span>½</span> 50:50 (Remove 2 wrong)</button>
+      <button class="life" id="changeq" disabled><span>🔄</span> Change Question (Backup)</button>
+      <button class="life" id="aud" disabled><span>📊</span> Audience Poll</button>
+    </div>
+    <h2 class="gold" style="margin-top:10px">1,000-Level Ladder</h2>
+    <div class="ladder-container">
+      <div class="ladder" id="ladder"></div>
+    </div>
+  </aside>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h2 id="mt">Game over</h2>
+    <p id="msg"></p>
+    <button class="btn primary" id="again">Play Again</button>
+  </div>
+</div>
+
+<script>
+// 100 Unique Levels:
+// Levels 1-30: Easy (Prizes up to ₹1 Lakh)
+// Levels 31-70: Medium (Prizes from ₹1 Lakh to ₹25 Lakhs)
+// Levels 71-100: Hard (Prizes from ₹50 Lakhs to ₹1 Crore and beyond)
+const LEVELS_DATA = [
+  // --- EASY (1-30) ---
+  {q: "Which planet is known as the Red Planet?", opts: ["Venus", "Mars", "Jupiter", "Mercury"], ans: 1, prize: 1000},
+  {q: "How many sides does a hexagon have?", opts: ["Five", "Six", "Seven", "Eight"], ans: 1, prize: 2000},
+  {q: "What is the capital of India?", opts: ["Mumbai", "New Delhi", "Jaipur", "Kolkata"], ans: 1, prize: 3000},
+  {q: "Which gas do plants absorb for photosynthesis?", opts: ["Oxygen", "Nitrogen", "Carbon dioxide", "Hydrogen"], ans: 2, prize: 4000},
+  {q: "Who wrote Jana Gana Mana?", opts: ["Bankim Chandra Chatterjee", "Rabindranath Tagore", "Sarojini Naidu", "Subramania Bharati"], ans: 1, prize: 5000},
+  {q: "What is Earth's largest ocean?", opts: ["Atlantic", "Indian", "Arctic", "Pacific"], ans: 3, prize: 6000},
+  {q: "Which instrument measures temperature?", opts: ["Barometer", "Thermometer", "Altimeter", "Speedometer"], ans: 1, prize: 7000},
+  {q: "What does CPU stand for?", opts: ["Central Processing Unit", "Computer Power Utility", "Core Program Upload", "Central Print Unit"], ans: 0, prize: 8000},
+  {q: "Kathakali is associated with which Indian state?", opts: ["Kerala", "Punjab", "Assam", "Gujarat"], ans: 0, prize: 9000},
+  {q: "What is the chemical symbol for gold?", opts: ["Ag", "Gd", "Au", "Go"], ans: 2, prize: 10000},
+  {q: "What is the smallest prime number?", opts: ["0", "1", "2", "3"], ans: 2, prize: 12000},
+  {q: "Which layer lies directly beneath Earth's crust?", opts: ["Inner core", "Outer core", "Mantle", "Atmosphere"], ans: 2, prize: 15000},
+  {q: "Who was the first person to walk on the Moon?", opts: ["Yuri Gagarin", "Buzz Aldrin", "Neil Armstrong", "Michael Collins"], ans: 2, prize: 20000},
+  {q: "Which theorem uses a² + b² = c²?", opts: ["Euclid's", "Pythagorean", "Archimedes'", "Aryabhata's"], ans: 1, prize: 25000},
+  {q: "Which part of a human cell contains most genetic material?", opts: ["Nucleus", "Ribosome", "Cell membrane", "Cytoplasm"], ans: 0, prize: 30000},
+  {q: "How many players are on a standard field hockey team?", opts: ["9", "10", "11", "12"], ans: 2, prize: 35000},
+  {q: "Which continent is the Sahara Desert located in?", opts: ["Asia", "Africa", "Australia", "South America"], ans: 1, prize: 40000},
+  {q: "What is the main ingredient in traditional guacamole?", opts: ["Tomato", "Avocado", "Potato", "Cucumber"], ans: 1, prize: 45000},
+  {q: "Which festival is known as the Festival of Lights?", opts: ["Holi", "Diwali", "Eid", "Navratri"], ans: 1, prize: 50000},
+  {q: "Which animal is known as the Ship of the Desert?", opts: ["Horse", "Elephant", "Camel", "Donkey"], ans: 2, prize: 60000},
+  {q: "What is the national currency of Japan?", opts: ["Yen", "Won", "Dollar", "Yuan"], ans: 0, prize: 70000},
+  {q: "Which country gifted the Statue of Liberty to the USA?", opts: ["Britain", "France", "Germany", "Spain"], ans: 1, prize: 80000},
+  {q: "How many colors are in a rainbow?", opts: ["5", "6", "7", "8"], ans: 2, prize: 90000},
+  {q: "Which gas makes up most of Earth's atmosphere?", opts: ["Oxygen", "Nitrogen", "Carbon dioxide", "Hydrogen"], ans: 1, prize: 100000}, // 1 Lakh threshold
+  {q: "What is the freezing point of water in Celsius?", opts: ["0°C", "32°C", "100°C", "-10°C"], ans: 0, prize: 110000},
+  {q: "Which sport is played at Wimbledon?", opts: ["Cricket", "Tennis", "Golf", "Badminton"], ans: 1, prize: 120000},
+  {q: "Who painted the Mona Lisa?", opts: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Claude Monet"], ans: 2, prize: 130000},
+  {q: "What is the tallest animal in the world?", opts: ["Elephant", "Giraffe", "Kangaroo", "Zebra"], ans: 1, prize: 140000},
+  {q: "In which city is the Taj Mahal located?", opts: ["Delhi", "Agra", "Jaipur", "Lucknow"], ans: 1, prize: 150000},
+  {q: "What is the hardest natural substance on Earth?", opts: ["Gold", "Iron", "Diamond", "Platinum"], ans: 2, prize: 160000},
+
+  // --- MEDIUM (31-70) ---
+  {q: "Which bird is universally known as a symbol of peace?", opts: ["Crow", "Pigeon", "Dove", "Parrot"], ans: 2, prize: 180000},
+  {q: "What is the capital of Australia?", opts: ["Sydney", "Melbourne", "Canberra", "Brisbane"], ans: 2, prize: 200000},
+  {q: "Which vitamin do we get primarily from sunlight?", opts: ["Vitamin A", "Vitamin B", "Vitamin C", "Vitamin D"], ans: 3, prize: 220000},
+  {q: "How many bones are in an adult human body?", opts: ["106", "206", "306", "406"], ans: 1, prize: 250000},
+  {q: "Which ocean is Bermuda located in?", opts: ["Pacific", "Indian", "Atlantic", "Arctic"], ans: 2, prize: 280000},
+  {q: "What is the boiling point of water in Fahrenheit?", opts: ["212°F", "180°F", "100°F", "320°F"], ans: 0, prize: 300000},
+  {q: "Which metal is liquid at room temperature?", opts: ["Iron", "Mercury", "Copper", "Aluminum"], ans: 1, prize: 330000},
+  {q: "How many strings does a standard acoustic guitar have?", opts: ["4", "5", "6", "8"], ans: 2, prize: 360000},
+  {q: "Which country won the FIFA World Cup in 2022?", opts: ["France", "Brazil", "Argentina", "Germany"], ans: 2, prize: 400000},
+  {q: "What is the largest mammal on Earth?", opts: ["African Elephant", "Blue Whale", "Giraffe", "Hippopotamus"], ans: 1, prize: 450000},
+  {q: "Which planet is closest to the Sun?", opts: ["Venus", "Mercury", "Earth", "Mars"], ans: 1, prize: 500000},
+  {q: "What is the capital of the United Kingdom?", opts: ["London", "Edinburgh", "Dublin", "Cardiff"], ans: 0, prize: 550000},
+  {q: "Which is the longest river in the world?", opts: ["Amazon", "Nile", "Yangtze", "Mississippi"], ans: 1, prize: 600000},
+  {q: "Who discovered penicillin?", opts: ["Alexander Fleming", "Louis Pasteur", "Marie Curie", "Albert Einstein"], ans: 0, prize: 650000},
+  {q: "What is the national sport of Canada?", opts: ["Ice Hockey", "Lacrosse", "Baseball", "Basketball"], ans: 1, prize: 700000},
+  {q: "Which gas causes bread dough to rise?", opts: ["Oxygen", "Carbon dioxide", "Nitrogen", "Helium"], ans: 1, prize: 750000},
+  {q: "What is the study of weather called?", opts: ["Geology", "Meteorology", "Astronomy", "Biology"], ans: 1, prize: 800000},
+  {q: "Which US state has the most population?", opts: ["Texas", "Florida", "New York", "California"], ans: 3, prize: 850000},
+  {q: "What is the main component of the sun?", opts: ["Oxygen", "Hydrogen", "Carbon", "Iron"], ans: 1, prize: 900000},
+  {q: "Which musical instrument has 88 keys?", opts: ["Guitar", "Piano", "Violin", "Flute"], ans: 1, prize: 1000000}, // 10 Lakhs
+  {q: "What is the capital of France?", opts: ["Lyon", "Marseille", "Paris", "Nice"], ans: 2, prize: 1100000},
+  {q: "Which superhero is known as the Caped Crusader?", opts: ["Superman", "Batman", "Spider-Man", "Iron Man"], ans: 1, prize: 1200000},
+  {q: "How many players are on the ice for one team in ice hockey?", opts: ["5", "6", "7", "8"], ans: 1, prize: 1300000},
+  {q: "Which gas is filled in party balloons to make them float?", opts: ["Oxygen", "Helium", "Hydrogen", "Nitrogen"], ans: 1, prize: 1400000},
+  {q: "What is the currency of the United Kingdom?", opts: ["Euro", "Dollar", "Pound Sterling", "Franc"], ans: 2, prize: 1500000},
+  {q: "Which continent is completely covered in ice sheets?", opts: ["Antarctica", "Asia", "Europe", "Australia"], ans: 0, prize: 1700000},
+  {q: "What is the speed of light approximately?", opts: ["300,000 km/s", "150,000 km/s", "3,000 km/s", "30,000 km/s"], ans: 0, prize: 1900000},
+  {q: "Which insect produces natural honey?", opts: ["Wasp", "Ant", "Bee", "Butterfly"], ans: 2, prize: 2100000},
+  {q: "What is the main language spoken in Brazil?", opts: ["Spanish", "Portuguese", "English", "French"], ans: 1, prize: 2300000},
+  {q: "Which planet has prominent ice rings around it?", opts: ["Mars", "Saturn", "Neptune", "Venus"], ans: 1, prize: 2500000},
+  {q: "What is the capital of Italy?", opts: ["Milan", "Venice", "Rome", "Florence"], ans: 2, prize: 2800000},
+  {q: "Who invented the practical telephone?", opts: ["Thomas Edison", "Alexander Graham Bell", "Nikola Tesla", "Guglielmo Marconi"], ans: 1, prize: 3100000},
+  {q: "Which organ pumps blood through the human body?", opts: ["Lungs", "Brain", "Heart", "Liver"], ans: 2, prize: 3400000},
+  {q: "What is the largest desert in the world by area?", opts: ["Sahara", "Gobi", "Antarctic Desert", "Kalahari"], ans: 2, prize: 3700000},
+  {q: "Which ancient country is famous for pyramids and pharaohs?", opts: ["Greece", "Egypt", "Mexico", "Peru"], ans: 1, prize: 4000000},
+  {q: "What is the chemical formula for pure water?", opts: ["CO2", "H2O", "NaCl", "O2"], ans: 1, prize: 4300000},
+  {q: "Which sport uses a feathered shuttlecock?", opts: ["Tennis", "Badminton", "Squash", "Table Tennis"], ans: 1, prize: 4600000},
+  {q: "What is the federal capital of Canada?", opts: ["Toronto", "Vancouver", "Ottawa", "Montreal"], ans: 2, prize: 4800000},
+  {q: "Which tree is a universal symbol of strength?", opts: ["Oak", "Willow", "Pine", "Banyan"], ans: 0, prize: 4900000},
+  {q: "What is the closest star to planet Earth?", opts: ["Proxima Centauri", "Betelgeuse", "The Sun", "Sirius"], ans: 2, prize: 5000000}, // 50 Lakhs threshold
+
+  // --- HARD (71-100) ---
+  {q: "Which animal is universally recognized as the fastest land mammal?", opts: ["Lion", "Cheetah", "Pronghorn", "Gazelle"], ans: 1, prize: 5500000},
+  {q: "What is the primary industrial component of paper production?", opts: ["Cotton", "Wood pulp", "Plastic", "Bamboo"], ans: 1, prize: 6000000},
+  {q: "Which greenhouse gas is primarily responsible for modern global warming?", opts: ["Oxygen", "Carbon dioxide", "Nitrogen", "Helium"], ans: 1, prize: 6500000},
+  {q: "What is the cultural capital and largest city of China?", opts: ["Shanghai", "Beijing", "Hong Kong", "Shenzhen"], ans: 1, prize: 7000000},
+  {q: "Which Mughal emperor built the Taj Mahal in Agra?", opts: ["Akbar", "Jahangir", "Shah Jahan", "Aurangzeb"], ans: 2, prize: 7500000},
+  {q: "What is the primary official language spoken in Mexico?", opts: ["Portuguese", "Spanish", "English", "Italian"], ans: 1, prize: 8000000},
+  {q: "In which year did India win its first Cricket World Cup?", opts: ["1975", "1983", "1987", "1992"], ans: 1, prize: 8500000},
+  {q: "Who formulated the three laws of planetary motion?", opts: ["Isaac Newton", "Johannes Kepler", "Galileo Galilei", "Nicolaus Copernicus"], ans: 1, prize: 9000000},
+  {q: "What is the deepest oceanic trench on Earth?", opts: ["Java Trench", "Mariana Trench", "Puerto Rico Trench", "Sunda Trench"], ans: 1, prize: 9500000},
+  {q: "Which element has the highest melting point of all pure elements?", opts: ["Iron", "Tungsten", "Platinum", "Carbon"], ans: 1, prize: 10000000}, // 1 Crore
+  {q: "What is the powerhouse organelle inside eukaryotic cells?", opts: ["Ribosome", "Mitochondria", "Golgi apparatus", "Endoplasmic reticulum"], ans: 1, prize: 11000000},
+  {q: "Who wrote the ancient Indian epic 'Meghaduta'?", opts: ["Valmiki", "Kalidasa", "Tulsidas", "Ved Vyasa"], ans: 1, prize: 12000000},
+  {q: "Which subatomic particle was discovered by J.J. Thomson in 1897?", opts: ["Proton", "Neutron", "Electron", "Positron"], ans: 2, prize: 13000000},
+  {q: "What is the national currency of South Korea?", opts: ["Yen", "Won", "Yuan", "Ringgit"], ans: 1, prize: 14000000},
+  {q: "Which gas comprises approximately 78% of Earth's atmosphere?", opts: ["Oxygen", "Nitrogen", "Argon", "Carbon dioxide"], ans: 1, prize: 15000000},
+  {q: "Who was the first woman Prime Minister of India?", opts: ["Sarojini Naidu", "Indira Gandhi", "Pratibha Patil", "Sushma Swaraj"], ans: 1, prize: 16000000},
+  {q: "What is the chemical formula for ordinary table salt?", opts: ["NaOH", "NaCl", "KCl", "HCl"], ans: 1, prize: 17000000},
+  {q: "Which mountain range separates Europe from Asia?", opts: ["Alps", "Himalayas", "Ural Mountains", "Andes"], ans: 2, prize: 18000000},
+  {q: "Who painted 'The Starry Night'?", opts: ["Claude Monet", "Vincent van Gogh", "Pablo Picasso", "Salvador Dali"], ans: 1, prize: 19000000},
+  {q: "What is the speed of sound in dry air at 20°C approximately?", opts: ["343 m/s", "1,500 m/s", "300,000 m/s", "1,235 m/s"], ans: 0, prize: 20000000}, // 2 Crores
+  {q: "Which planet in our solar system has the most moons?", opts: ["Jupiter", "Saturn", "Uranus", "Neptune"], ans: 1, prize: 22000000},
+  {q: "What is the capital city of Argentina?", opts: ["Buenos Aires", "Santiago", "Lima", "Bogota"], ans: 0, prize: 24000000},
+  {q: "Who proposed the theory of general relativity?", opts: ["Isaac Newton", "Niels Bohr", "Albert Einstein", "Max Planck"], ans: 2, prize: 26000000},
+  {q: "Which vitamin is also known as ascorbic acid?", opts: ["Vitamin A", "Vitamin B12", "Vitamin C", "Vitamin D"], ans: 2, prize: 28000000},
+  {q: "What is the smallest bone in the human body?", opts: ["Femur", "Stapes", "Tibia", "Radius"], ans: 1, prize: 30000000},
+  {q: "Which river flows through the city of Paris?", opts: ["Thames", "Danube", "Seine", "Rhine"], ans: 2, prize: 35000000},
+  {q: "Who wrote the play 'Romeo and Juliet'?", opts: ["Charles Dickens", "William Shakespeare", "George Bernard Shaw", "Jane Austen"], ans: 1, prize: 40000000},
+  {q: "What is the rarest natural blood type in humans?", opts: ["O-negative", "AB-negative", "Rh-null", "B-negative"], ans: 2, prize: 50000000},
+  {q: "Which physicist formulated the laws of motion and universal gravitation?", opts: ["Albert Einstein", "Isaac Newton", "Galileo Galilei", "Michael Faraday"], ans: 1, prize: 75000000},
+  {q: "What is the ultimate prize level for conquering all 100 questions?", opts: ["10 Crore Jackpot", "100 Crore Grand Master", "Ultimate Millionaire", "Supreme Champion"], ans: 2, prize: 100000000} // 10 Crores
+];
+
+// 900 additional questions (levels 101-1000), generated from varied school-level topics.
+function buildExtraQuestions() {
+  const out = [];
+  const add = (q, answer, wrongs) => {
+    const opts = [String(answer)];
+    for (const w of wrongs) if (!opts.includes(String(w)) && opts.length < 4) opts.push(String(w));
+    let k = 1;
+    while (opts.length < 4) {
+      const candidate = String(Number(answer) + (k % 2 ? k : -k));
+      if (!opts.includes(candidate)) opts.push(candidate);
+      k++;
+    }
+    // Shuffle choices while retaining the correct answer index.
+    for (let j = opts.length - 1; j > 0; j--) {
+      const r = Math.floor(Math.random() * (j + 1));
+      [opts[j], opts[r]] = [opts[r], opts[j]];
+    }
+    out.push({ q, opts, ans: opts.indexOf(String(answer)), prize: 0 });
+  };
+
+  // 100 multiplication questions
+  for (let n = 0; n < 100; n++) {
+    const a = 11 + Math.floor(n / 10), b = 11 + (n % 10), v = a*b;
+    add(`What is ${a} × ${b}?`, v, [v+a, v-b, v+10]);
+  }
+  // 100 addition questions
+  for (let n = 0; n < 100; n++) {
+    const a = 125 + n*7, b = 38 + (n*13)%97, v = a+b;
+    add(`A library has ${a} books and receives ${b} more. How many books does it have now?`, v, [v+ b, v-a, v-10]);
+  }
+  // 100 subtraction questions
+  for (let n = 0; n < 100; n++) {
+    const a = 850 + n*9, b = 125 + (n*11)%113, v = a-b;
+    add(`A warehouse has ${a} boxes and ships ${b}. How many boxes remain?`, v, [v+b, v+a, v-15]);
+  }
+  // 100 exact-division questions
+  for (let n = 0; n < 100; n++) {
+    const divisor = 3 + (n%9), quotient = 14 + Math.floor(n/9)*2 + (n%3), dividend = divisor*quotient;
+    add(`What is ${dividend} ÷ ${divisor}?`, quotient, [quotient+divisor, quotient-2, quotient+3]);
+  }
+  // 100 percentage questions
+  for (let n = 0; n < 100; n++) {
+    const pct = 5 + (n%10)*5, base = 40 + Math.floor(n/10)*20, v = base*pct/100;
+    add(`What is ${pct}% of ${base}?`, v, [v+base/10, v+5, v*2]);
+  }
+  // 100 number-sequence questions
+  for (let n = 0; n < 100; n++) {
+    const start = 3 + n*2, step = 2 + (n%13), v = start + step*5;
+    add(`Find the next number: ${start}, ${start+step}, ${start+2*step}, ${start+3*step}, ${start+4*step}, __.`, v, [v+step, v-step, v+2]);
+  }
+  // 100 geometry questions: rectangle area and perimeter
+  for (let n = 0; n < 50; n++) {
+    const l = 5+n, w = 4+(n%12), v=l*w;
+    add(`A rectangle is ${l} cm long and ${w} cm wide. What is its area?`, `${v} cm²`, [`${v+l} cm²`, `${2*(l+w)} cm²`, `${v+ w} cm²`]);
+  }
+  for (let n = 0; n < 50; n++) {
+    const l = 7+n, w = 3+(n%10), v=2*(l+w);
+    add(`A rectangle is ${l} cm long and ${w} cm wide. What is its perimeter?`, `${v} cm`, [`${l*w} cm`, `${v+2} cm`, `${v-4} cm`]);
+  }
+  // 100 unit-conversion questions
+  const conversions = [
+    n => {let v=2+n; return [`How many metres are in ${v} kilometres?`,v*1000,[v*100,v*10,v*10000]];},
+    n => {let v=3+n; return [`How many centimetres are in ${v} metres?`,v*100,[v*10,v*1000,v*10+100]];},
+    n => {let v=2+n; return [`How many grams are in ${v} kilograms?`,v*1000,[v*100,v*10,v*10000]];},
+    n => {let v=2+n; return [`How many millilitres are in ${v} litres?`,v*1000,[v*100,v*10,v*10000]];},
+    n => {let v=2+n; return [`How many minutes are in ${v} hours?`,v*60,[v*30,v*100,v*24]];}
+  ];
+  for (let n=0; n<100; n++) { const [q,a,w]=conversions[n%5](2+Math.floor(n/5)); add(q,a,w); }
+  // 100 squares and square-root questions
+  for (let n=0; n<50; n++) {
+    const a=11+n, v=a*a;
+    add(`What is ${a} squared (${a}²)?`,v,[v+a,v-1,(a+1)*(a+1)]);
+  }
+  for (let n=0; n<50; n++) {
+    const a=11+n, v=a*a;
+    add(`What is the square root of ${v}?`,a,[a+1,a-1,a+2]);
+  }
+
+  // 1000 levels in total: the original 100 plus these 900.
+  for (let n=0; n<out.length; n++) {
+    out[n].prize = 110000000 + Math.round(n * (890000000 / 899));
+  }
+  return out;
+}
+LEVELS_DATA.push(...buildExtraQuestions());
+
+let username = "Player", i = 0, earned = 0, safe = 0, lives = 10, active = false, locked = false, used = {fifty: 0, changeq: 0, aud: 0}, removed = [], currentQ = null;
+
+const $ = x => document.getElementById(x), money = n => "₹" + n.toLocaleString("en-IN");
+
+function initSetup() {
+  $("username").value = "Player";
+  ladder();
+  controls();
+  topStats();
+}
+
+$("username").addEventListener("input", () => {
+  username = $("username").value.trim() || "Player";
+  topStats();
+});
+
+
+function ladder() {
+  $("ladder").innerHTML = LEVELS_DATA.map((item, n) => `<div class="level ${n === i && active ? "current" : ""} ${n === 23 || n === 248 || n === 698 ? "safe" : ""}"><span>${String(n + 1).padStart(3, "0")} &nbsp; ${money(item.prize)}</span>${n === 23 || n === 248 || n === 698 || n === 999 ? "🔒" : ""}</div>`).join("");
+}
+
+function controls() {
+  const labels = {
+    fifty: `<span>½</span> 50:50 (${10 - used.fifty} left)`,
+    changeq: `<span>🔄</span> Change Question (${10 - used.changeq} left)`,
+    aud: `<span>📊</span> Audience Poll (${10 - used.aud} left)`
+  };
+  ["fifty", "changeq", "aud"].forEach(k => {
+    $(k).disabled = !active || locked || used[k] >= 10;
+    $(k).innerHTML = labels[k];
+  });
+}
+
+function topStats() {
+  $("pname").textContent = username;
+  $("plives").textContent = "❤️".repeat(lives) + "🖤".repeat(10 - lives) + ` (${lives}/10)`;
+  $("qn").textContent = Math.min(i + 1, 1000);
+  $("cash").textContent = money(earned);
+  $("walk").disabled = !active || locked;
+}
+
+function startGame() {
+  username = $("username").value.trim() || "Player";
+  $("username").value = username;
+  startPlayerTurn();
+}
+
+function startPlayerTurn() {
+  i = 0; earned = 0; safe = 0; lives = 10; active = true; locked = false; used = {fifty: 0, changeq: 0, aud: 0};
+  $("start").hidden = true;
+  loadQuestion();
+}
+
+function loadQuestion() {
+  if (i >= 1000) {
+    finish("🏆 ULTIMATE MILLIONAIRE CHAMPION!", `${username} conquered all 1,000 levels and won the grand ${money(earned)} jackpot!`);
+    return;
+  }
+  locked = false;
+  removed = [];
+  currentQ = LEVELS_DATA[i];
+  $("question").textContent = currentQ.q;
+  $("opts").innerHTML = currentQ.opts.map((a, n) => `<button class="opt" data-n="${n}"><b>${"ABCD"[n]}:</b> ${a}</button>`).join("");
+  [...document.querySelectorAll(".opt")].forEach(b => b.onclick = () => answer(+b.dataset.n, b));
+  
+  // Difficulty tagging feedback banner
+  let diffTag = i < 300 ? "Easy" : (i < 700 ? "Medium" : "Hard");
+  $("feedback").textContent = `Player: ${username} | Difficulty: ${diffTag}. Choose A, B, C or D.`;
+  
+  topStats();
+  ladder();
+  controls();
+}
+
+function answer(n, b) {
+  if (!active || locked || removed.includes(n)) return;
+  locked = true;
+  let bs = [...document.querySelectorAll(".opt")];
+  bs.forEach(x => x.disabled = true);
+  
+  if (n === currentQ.ans) {
+    b.classList.add("correct");
+    earned = currentQ.prize;
+    if (i === 23 || i === 248 || i === 698) safe = earned; // Safety checkpoints at Levels 24, 249 and 699
+    $("feedback").textContent = "Correct! Moving up the ladder...";
+    i++;
+    topStats();
+    ladder();
+    controls();
+    if (i === 1000) {
+      setTimeout(() => finish("🏆 ULTIMATE MILLIONAIRE CHAMPION!", `${username} won ${money(earned)}!`), 900);
+    } else {
+      setTimeout(loadQuestion, 1100); // Faster transition speed for high levels
+    }
+  } else {
+    b.classList.add("wrong");
+    bs[currentQ.ans].classList.add("correct");
+    lives--;
+    topStats();
+    if (lives <= 0) {
+      $("feedback").textContent = "Out of lives!";
+      setTimeout(() => finish("Game Over", `${username} ran out of lives and takes home the safety prize: ${money(safe)}.`), 1400);
+    } else {
+      $("feedback").textContent = `Wrong! ${lives} life/lives remaining.`;
+      setTimeout(() => {
+        locked = false;
+        bs.forEach((x, idx) => {
+          if (!removed.includes(idx)) x.disabled = false;
+          x.classList.remove("wrong");
+        });
+        topStats();
+      }, 1400);
+    }
+  }
+}
+
+function finish(title, msg) {
+  active = false;
+  locked = true;
+  $("mt").textContent = title;
+  $("msg").textContent = msg;
+  $("overlay").style.display = "grid";
+  $("walk").disabled = true;
+  controls();
+}
+
+$("start").onclick = startGame;
+$("restart").onclick = () => {
+  $("overlay").style.display = "none";
+  $("start").hidden = false;
+  $("question").textContent = "Enter your username and click Start Game to begin!";
+  $("opts").innerHTML = "";
+  $("feedback").textContent = "Ready when you are. Good luck!";
+  username = $("username").value.trim() || "Player";
+  $("username").value = username;
+  active = locked = false;
+  i = 0; earned = safe = 0; lives = 10; used = {fifty: 0, changeq: 0, aud: 0};
+  topStats();
+  ladder();
+  controls();
+};
+
+$("again").onclick = () => {
+  $("overlay").style.display = "none";
+  startPlayerTurn();
+};
+
+$("walk").onclick = () => {
+  if (active && !locked) {
+    finish("You Walked Away!", `${username} takes home ${money(earned)}. Excellent gameplay!`);
+  }
+};
+
+$("fifty").onclick = () => {
+  if (!active || locked || used.fifty >= 10) return;
+  used.fifty++;
+  let wrong = [0, 1, 2, 3].filter(n => n !== currentQ.ans).sort(() => Math.random() - .5).slice(0, 2);
+  removed = wrong;
+  document.querySelectorAll(".opt").forEach(b => {
+    if (wrong.includes(+b.dataset.n)) {
+      b.disabled = true;
+      b.style.opacity = ".2";
+      b.style.textDecoration = "line-through";
+    }
+  });
+  controls();
+  $("feedback").textContent = "50:50 used — two incorrect options removed.";
+};
+
+$("changeq").onclick = () => {
+  if (!active || locked || used.changeq >= 10) return;
+  used.changeq++;
+  // Backup question generator matching current tier difficulty
+  let backupPool = LEVELS_DATA.filter((_, idx) => Math.abs(idx - i) <= 5);
+  let newQ = backupPool[Math.floor(Math.random() * backupPool.length)] || LEVELS_DATA[0];
+  LEVELS_DATA[i] = newQ;
+  loadQuestion();
+  $("feedback").textContent = "Question changed using backup tier pool!";
+  controls();
+};
+
+$("aud").onclick = () => {
+  if (!active || locked || used.aud >= 10) return;
+  used.aud++;
+  let v = [0, 0, 0, 0], rest = [0, 1, 2, 3].filter(n => n !== currentQ.ans), left = 100;
+  v[currentQ.ans] = 50 + Math.floor(Math.random() * 30);
+  left -= v[currentQ.ans];
+  rest.forEach((n, k) => {
+    v[n] = k === 2 ? left : Math.floor(Math.random() * (left + 1));
+    left -= v[n];
+  });
+  v[rest[2]] += left;
+  $("feedback").textContent = "Audience poll — " + v.map((x, n) => "ABCD"[n] + ": " + x + "%").join(" · ");
+  controls();
+};
+
+initSetup();
+</script>
+</body>
+</html>
